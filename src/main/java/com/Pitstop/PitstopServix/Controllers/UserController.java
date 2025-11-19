@@ -36,10 +36,15 @@ public class UserController {
     }
 
     @PostMapping("/register/garage")
-    public User registerGarageOwner(@RequestBody GarageRegistrationRequest request) {
+    public ResponseEntity<Map<String, Object>> registerGarageOwner(@RequestBody GarageRegistrationRequest request) {
         User user = request.getUser();
         Garage garage = request.getGarage();
-        return userService.registerGarageOwner(user, garage);
+        User savedUser = userService.registerGarageOwner(user, garage);
+        String token = jwtUtil.generateToken(savedUser.getEmail());
+        Map<String, Object> body = new HashMap<>();
+        body.put("token", token);
+        body.put("user", sanitizeUser(savedUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
     @PostMapping("/register/customer")
@@ -52,11 +57,7 @@ public class UserController {
         Map<String, Object> body = new HashMap<>();
         body.put("token", token);
 
-        Map<String, Object> userResp = new HashMap<>();
-        userResp.put("id", savedUser.getId());
-        userResp.put("email", savedUser.getEmail());
-        userResp.put("name", savedUser.getName());
-        body.put("user", userResp);
+        body.put("user", sanitizeUser(savedUser));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
@@ -78,8 +79,30 @@ public class UserController {
         User user = optionalUser.get();
         String token = jwtUtil.generateToken(user.getEmail());
         response.put("token", token);
-        response.put("user", user); // You may want to exclude password field in real response
+        response.put("user", sanitizeUser(user));
         return response;
+    }
+
+    private Map<String, Object> sanitizeUser(User user) {
+        Map<String, Object> dto = new HashMap<>();
+        dto.put("id", user.getId());
+        dto.put("name", user.getName());
+        dto.put("email", user.getEmail());
+        dto.put("role", user.getRole());
+        if (user.getCustomerProfile() != null) {
+            Map<String, Object> profile = new HashMap<>();
+            profile.put("vehicleNumber", user.getCustomerProfile().getVehicleNumber());
+            profile.put("phone", user.getCustomerProfile().getPhone());
+            dto.put("customerProfile", profile);
+        }
+        if (user.getGarage() != null) {
+            Map<String, Object> garage = new HashMap<>();
+            garage.put("id", user.getGarage().getId());
+            garage.put("garageName", user.getGarage().getGarageName());
+            garage.put("garageAddress", user.getGarage().getGarageAddress());
+            dto.put("garage", garage);
+        }
+        return dto;
     }
 }
 

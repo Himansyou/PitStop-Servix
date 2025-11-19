@@ -21,4 +21,6 @@ public class CustomerProfile {
 
     private String vehicleNumber;
 
+    private String phone;
+
 }

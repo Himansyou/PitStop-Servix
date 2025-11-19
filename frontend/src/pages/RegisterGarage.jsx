@@ -64,7 +64,7 @@ export default function RegisterGarage() {
               />
             </div>
             <div>
-              <div className="text-white font-bold text-3xl">PiStop</div>
+              <div className="text-white font-bold text-3xl">PitStop</div>
               <div className="text-cyan-400 text-lg font-semibold">Servix</div>
             </div>
           </div>

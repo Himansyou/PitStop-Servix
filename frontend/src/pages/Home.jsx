@@ -57,12 +57,10 @@ export default function Home() {
   };
 
   // navigate to details page, passing dynamic fields via state
-  const navigateToServices = (garage) => {
-    navigate(`/garage/${garage.id}`, {
+  const openBooking = (garage) => {
+    navigate(`/garage/${garage.id}/book`, {
       state: {
-        name: garage.name,
-        location: garage.location,
-        ownerName: garage.ownerName,
+        garage,
       },
     });
   };
@@ -261,9 +259,13 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {popularGarages.map((garage) => (
-              <div
+              <article
                 key={garage.id}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-slate-100"
+                role="button"
+                tabIndex={0}
+                onClick={() => openBooking(garage)}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && openBooking(garage)}
+                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-blue-300/60"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -278,7 +280,7 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <div className="p-5">
+                <div className="p-5 space-y-4">
                   <h3 className="text-xl font-bold text-slate-800 mb-2">{garage.name}</h3>
                   
                   <div className="flex items-start gap-2 mb-3">
@@ -300,16 +302,17 @@ export default function Home() {
                     ))}
                   </div>
 
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => navigateToServices(garage)}
-                      className="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-                    >
-                      Check Services
-                    </button>
+                  <div className="flex flex-wrap gap-3 pt-2 border-t border-slate-100">
+                    <div className="flex items-center gap-2 text-slate-500 text-sm">
+                      <Phone className="w-4 h-4" />
+                      <span>{garage.phone}</span>
+                    </div>
+                    <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">
+                      Tap to book slot
+                    </span>
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>  

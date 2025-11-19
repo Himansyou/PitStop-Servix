@@ -1,6 +1,7 @@
 package com.Pitstop.PitstopServix.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,6 @@ public class Garage {
 
     @OneToOne
     @JoinColumn(name = "owner_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"garage"})
     private User owner;
 }
