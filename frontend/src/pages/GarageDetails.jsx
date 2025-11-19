@@ -108,7 +108,7 @@ export default function GarageDetails() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">Available Services</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {staticServices.map((service, idx) => (
@@ -127,6 +127,16 @@ export default function GarageDetails() {
                   </div>
                 ))}
               </div>
+              <button
+                onClick={() =>
+                  navigate(`/garage/${id}/book`, {
+                    state: { garage },
+                  })
+                }
+                className="w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-2xl transition-transform hover:-translate-y-0.5"
+              >
+                Book an Appointment
+              </button>
             </div>
           </div>
         )}

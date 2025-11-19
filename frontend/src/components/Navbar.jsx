@@ -1,12 +1,20 @@
-import React, {useEffect,useState} from "react";
-import { Link, useNavigate , useLocation} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+  const location = useLocation();
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const ownerEmail = (import.meta.env.VITE_OWNER_EMAIL || "owner@pitstopservix.com").toLowerCase();
+  const ownerRoles = ["OWNER", "ADMIN", "GARAGE_OWNER"];
+  const toRole = (role) => (typeof role === "string" ? role.toUpperCase() : role?.toUpperCase?.());
+  const isOwner =
+    (user?.role && ownerRoles.includes(toRole(user.role))) ||
+    (Array.isArray(user?.roles) && user.roles.some((role) => ownerRoles.includes(toRole(role)))) ||
+    user?.email?.toLowerCase() === ownerEmail;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,6 +94,16 @@ export default function Navbar() {
         >
           Home
         </Link>
+        {token && isOwner && (
+          <Link
+            to="/admin/appointments"
+            className={`font-medium transition-colors ${
+              isScrolled ? "text-gray-700 hover:text-indigo-600" : "text-white hover:text-indigo-300"
+            }`}
+          >
+            Manage Appointments
+          </Link>
+        )}
 
         {!token ? (
           <>

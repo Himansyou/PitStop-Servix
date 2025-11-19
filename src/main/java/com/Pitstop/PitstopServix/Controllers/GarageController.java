@@ -22,6 +22,13 @@ public class GarageController {
         return ResponseEntity.ok(garages);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Garage> getGarageById(@PathVariable Long id) {
+        return garageRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
   //  @GetMapping("/popular")
   //  public ResponseEntity<List<Garage>> getPopularGarages() {
         // You might want to sort by rating or number of reviews

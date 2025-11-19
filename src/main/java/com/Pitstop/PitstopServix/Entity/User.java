@@ -27,7 +27,7 @@ public class User {
 
     // For garage owners
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
-    @JsonManagedReference
+
     private Garage garage;
 
     // For customers
